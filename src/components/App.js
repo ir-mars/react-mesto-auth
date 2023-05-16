@@ -183,7 +183,7 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token && !loggedIn) {
+    if (token) {
       auth.checkToken(token)
         .then((data) => {
           setAuthUserEmail(data.email);
@@ -194,7 +194,7 @@ function App() {
           console.log(err);
         })
     }
-  }, [loggedIn]);
+  }, [navigate]);
 
   function signOut() {
     localStorage.removeItem('token');
@@ -207,7 +207,8 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>              
         <Routes>
           <Route path="/" 
-            element={<Main
+            element={<ProtectedRoute
+              element={Main}
               cards={cards}       
               onEditAvatar={handleEditAvatarClick}
               onEditProfile={handleEditProfileClick}
