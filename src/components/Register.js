@@ -15,7 +15,7 @@ function Register ({ handleRegisterSubmit }) {
     handleRegisterSubmit(email, password)
   }
 
-  const handleChange = (evt) => {
+  function handleChange (evt) {
     const { name, value } = evt.target;
     setFormValues({
       ...formValues,
@@ -33,8 +33,9 @@ function Register ({ handleRegisterSubmit }) {
         title="Регистрация"
         buttonText="Зарегистрироваться"
         onChange={handleChange}
-        onSubmit={handleSubmit}
+        handleSubmit={handleSubmit}
         formValues={formValues}
+        autoComplete="new-password"
       >
       </AuthForm>              
     </>

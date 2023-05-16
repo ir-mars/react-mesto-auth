@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-function AuthForm ({ name, title, buttonText, onSubmit, formValues, handleChange }) {
+function AuthForm ({ name, title, buttonText, handleSubmit, formValues, onChange, autoComplete }) {
     return (
       <div className={`auth auth_type_${name}`}>
         <div className="auth__container">
@@ -9,19 +9,20 @@ function AuthForm ({ name, title, buttonText, onSubmit, formValues, handleChange
             className="auth__form"
             name={`${name}`}
             action="#"
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit}
           >
             <input
               className="auth__input auth__input_email"
               name="email"
               id="email"
               type="email"
+              autoComplete="email"
               placeholder="Email"
               minLength={2}
               maxLength={40}
               required
               value={formValues.email}
-              onChange={handleChange} 
+              onChange={onChange} 
             />
             <span
               className="auth__input-error"
@@ -32,12 +33,13 @@ function AuthForm ({ name, title, buttonText, onSubmit, formValues, handleChange
               name="password"
               id="password"
               type="password"
+              autoComplete={autoComplete}
               placeholder="Пароль"
               minLength={2}
               maxLength={200}
               required
               value={formValues.password}
-              onChange={handleChange} 
+              onChange={onChange} 
             />
             <span
               className="auth__input-error"

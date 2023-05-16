@@ -15,7 +15,7 @@ function Login ({ handleLoginSubmit }) {
     handleLoginSubmit(email, password)
   }
 
-  const handleChange = (evt) => {
+  function handleChange (evt) {
     const { name, value } = evt.target;
     setFormValues({
       ...formValues,
@@ -33,8 +33,9 @@ function Login ({ handleLoginSubmit }) {
         title="Вход"
         buttonText="Войти"
         onChange={handleChange}
-        onSubmit={handleSubmit}
+        handleSubmit={handleSubmit}
         formValues={formValues}
+        autoComplete="current-password"
       >
       </AuthForm> 
     </>
