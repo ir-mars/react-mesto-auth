@@ -18,6 +18,8 @@ import InfoToolTip from './InfoToolTip';
 
 import ProtectedRoute from './ProtectedRoute';
 import * as auth from '../utils/auth';
+import imgSuccess from '../images/success.svg';
+import imgFail from '../images/fail.svg'; 
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -28,10 +30,10 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [cardToDelete, setCardToDelete] = useState({});
-  const [isToolTipPopupOpen, setIsToolTipPopupOpen] = useState(false);
-  //const [toolTipStatus, setToolTipStatus] = useState(true);
+  const [isToolTipOpen, setIsToolTipOpen] = useState(false);
+  const [statusToolTip, setStatusToolTip] = useState(false);
+  const [textToolTip, setTextToolTip] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
-
   //const navigate = useNavigate();
 
   function handleEditAvatarClick () {
@@ -62,7 +64,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsDeleteCardPopupOpen(false);
     setSelectedCard(null);
-    setIsToolTipPopupOpen(false);
+    setIsToolTipOpen(false);
   };
 
   function handleCardLike (card, value) {
@@ -153,7 +155,7 @@ function App() {
               onCardLike={handleCardLike}
               onCardDelete={handleDeleteClick}
               loggedIn={loggedIn}
-               />}          
+              />}          
           />
           <Route path="/sign-in"
             element={<Login />} />
@@ -192,11 +194,13 @@ function App() {
           onCardDelete={handleCardDelete}
         />
         
-        {/*<InfoToolTip>
-          isOpen={isToolTipPopupOpen}
+        <InfoToolTip>
+          isOpen={isToolTipOpen}
           onClose={closeAllPopups}
-          status={toolTipStatus}
-        </InfoToolTip>*/}
+          text={textToolTip}
+          status={statusToolTip}
+          image={statusToolTip ? imgSuccess : imgFail}
+        </InfoToolTip>
       </CurrentUserContext.Provider>
     </div>  
   );
