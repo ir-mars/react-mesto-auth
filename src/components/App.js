@@ -168,9 +168,9 @@ function App() {
       .then((data) => {
         if (data.token) {
           localStorage.setItem('token', data.token)
-          setLoggedIn(true);
           setAuthUserEmail(email);
-          navigate("/", {replace: true});          
+          setLoggedIn(true);
+          navigate("/", {replace: true});                         
         }
       })
       .catch((err) => {
@@ -183,7 +183,7 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token && !loggedIn) {
       auth.checkToken(token)
         .then((data) => {
           setAuthUserEmail(data.email);
@@ -194,12 +194,12 @@ function App() {
           console.log(err);
         })
     }
-  }, [navigate]);
+  }, [loggedIn]);
 
   function signOut() {
-    setLoggedIn(false);
     localStorage.removeItem('token');
-    navigate("/", {replace: true});
+    setLoggedIn(false);
+    navigate("/sign-in", {replace: true});
   } 
     
   return (
@@ -207,8 +207,7 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>              
         <Routes>
           <Route path="/" 
-            element={<ProtectedRoute
-              element={Main}
+            element={<Main
               cards={cards}       
               onEditAvatar={handleEditAvatarClick}
               onEditProfile={handleEditProfileClick}
@@ -218,7 +217,7 @@ function App() {
               onCardDelete={handleDeleteClick}
               loggedIn={loggedIn}
               email={authUserEmail}
-              exit={signOut}
+              signOut={signOut}
               />}          
           />
           <Route path="/sign-in"
