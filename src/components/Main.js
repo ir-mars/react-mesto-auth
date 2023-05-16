@@ -4,7 +4,7 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import Card from './Card';
 import Header from './Header';
 
-function Main ({ cards, onEditProfile, onEditAvatar, onAddPlace, onCardClick, onCardLike, onCardDelete, exit, email }) {
+function Main ({ cards, onEditProfile, onEditAvatar, onAddPlace, onCardClick, onCardLike, onCardDelete, signOut, email }) {
   const { name, about, avatar } = useContext(CurrentUserContext);
   
   return (
@@ -12,7 +12,7 @@ function Main ({ cards, onEditProfile, onEditAvatar, onAddPlace, onCardClick, on
       <Header>
         <div className="header__container">
           <p className="header__user-email">{email}</p>
-          <button className="header__exit-btn" type="button" onClick={exit}>Выйти</button>
+          <button className="header__exit-btn" type="button" onClick={signOut}>Выйти</button>
         </div>
       </Header>
       <main className="content">

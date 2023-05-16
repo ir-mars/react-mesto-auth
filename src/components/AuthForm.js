@@ -50,7 +50,7 @@ function AuthForm ({ name, title, buttonText, handleSubmit, formValues, onChange
           {name === "register" && (
             <p className="auth__text">
               Уже зарегистрированы?
-              <Link to="sign-in" className="auth__link">Войти</Link>
+              <Link to="/sign-in" className="auth__link">Войти</Link>
             </p>
           )}
         </div>

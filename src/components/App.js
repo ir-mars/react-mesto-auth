@@ -1,10 +1,9 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { api } from '../utils/api';
 
-import Header from './Header';
 import Footer from './Footer';
 import Main from './Main';
 import ImagePopup from './ImagePopup';
@@ -34,7 +33,8 @@ function App() {
   const [statusToolTip, setStatusToolTip] = useState(false);
   const [textToolTip, setTextToolTip] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
-  //const navigate = useNavigate();
+  const [authUserEmail, setAuthUserEmail] = useState('');
+  const navigate = useNavigate();
 
   function handleEditAvatarClick () {
     setIsEditAvatarPopupOpen(true);
@@ -122,6 +122,7 @@ function App() {
   }
 
   useEffect (() => {
+    loggedIn &&
     api.getUserInfo()
       .then(({ name, about, avatar, _id }) => {
         setCurrentUser({ name, about, avatar, _id })
@@ -129,9 +130,11 @@ function App() {
       .catch((err) => {
         console.log(err)
       })
-  }, []);
+      
+  }, [loggedIn]);
 
   useEffect (() => {
+    loggedIn &&
     api.getInitialCards()
       .then((cardsData) => {
         setCards(cardsData) /*console.log(cardsData)*/
@@ -139,14 +142,73 @@ function App() {
       .catch((err) => {
         console.log(err)
       })
-  }, []);
+      
+  }, [loggedIn]);
+
+  function handleRegister(email, password) {
+    auth.register(email, password)
+      .then(()=> {
+        setStatusToolTip(true);
+        setIsToolTipOpen(true);
+        setTextToolTip('Вы успешно зарегистрировались!')
+        navigate("/sign-in", {replace: true})      
+      })
+      .catch((err) => {
+        setStatusToolTip(false)
+        setTextToolTip('Что-то пошло не так! Попробуйте еще раз.')
+        console.log(err);
+      })
+      .finally(() => {
+        setIsToolTipOpen(true)
+      })
+  }
+
+  function handleLogin(email, password) {
+    auth.authorize(email, password)
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem('token', data.token)
+          setLoggedIn(true);
+          setAuthUserEmail(email);
+          navigate("/", {replace: true});          
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsToolTipOpen(true);
+        setStatusToolTip(false);
+        setTextToolTip('Что-то пошло не так! Попробуйте еще раз.')
+      })
+  }
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      auth.checkToken(token)
+        .then((data) => {
+          setAuthUserEmail(data.email);
+          setLoggedIn(true);
+          navigate("/", {replace: true})
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
+  }, [navigate]);
+
+  function signOut() {
+    setLoggedIn(false);
+    localStorage.removeItem('token');
+    navigate("/", {replace: true});
+  } 
     
   return (
     <div>  
       <CurrentUserContext.Provider value={currentUser}>              
         <Routes>
           <Route path="/" 
-            element={<Main
+            element={<ProtectedRoute
+              element={Main}
               cards={cards}       
               onEditAvatar={handleEditAvatarClick}
               onEditProfile={handleEditProfileClick}
@@ -155,12 +217,14 @@ function App() {
               onCardLike={handleCardLike}
               onCardDelete={handleDeleteClick}
               loggedIn={loggedIn}
+              email={authUserEmail}
+              exit={signOut}
               />}          
           />
           <Route path="/sign-in"
-            element={<Login />} />
+            element={<Login handleLoginSubmit={handleLogin} />} />
           <Route path="/sign-up"
-            element={<Register />} />
+            element={<Register handleRegisterSubmit={handleRegister} />} />
         </Routes>    
         <Footer />
     
@@ -201,6 +265,7 @@ function App() {
           status={statusToolTip}
           image={statusToolTip ? imgSuccess : imgFail}
         </InfoToolTip>
+
       </CurrentUserContext.Provider>
     </div>  
   );
