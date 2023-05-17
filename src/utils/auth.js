@@ -1,6 +1,6 @@
 const BASE_URL = "https://auth.nomoreparties.co";
 
-function result(res) {
+function checkResponse(res) {
     if (res.ok) {
         return res.json()
     }
@@ -16,7 +16,7 @@ export function register (email, password) {
         },
         body: JSON.stringify({ email, password })
     })
-        .then(result)
+        .then(checkResponse)
 
 };
 
@@ -29,7 +29,7 @@ export function authorize (email, password) {
         },
         body: JSON.stringify({ email, password })
     })
-        .then(result)
+        .then(checkResponse)
 
 };
 
@@ -41,7 +41,6 @@ export function checkToken (token) {
             "Authorization": `Bearer ${token}`
         },
     })
-        .then(result)
+        .then(checkResponse)
         .then(({data}) => data)
-        .catch(err => console.log(err))
 };
