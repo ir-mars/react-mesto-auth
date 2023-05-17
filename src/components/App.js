@@ -30,8 +30,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [cardToDelete, setCardToDelete] = useState({});
   const [isToolTipOpen, setIsToolTipOpen] = useState(false);
-  const [statusToolTip, setStatusToolTip] = useState(false);
-  const [textToolTip, setTextToolTip] = useState('');
+  const [status, setStatus] = useState({ img: '', text: ''});
   const [loggedIn, setLoggedIn] = useState(false);
   const [authUserEmail, setAuthUserEmail] = useState('');
   const navigate = useNavigate();
@@ -147,15 +146,18 @@ function App() {
 
   function handleRegister(email, password) {
     auth.register(email, password)
-      .then(()=> {
-        setStatusToolTip(true);
-        setIsToolTipOpen(true);
-        setTextToolTip('Вы успешно зарегистрировались!')
-        navigate("/sign-in", {replace: true})      
+      .then((res) => {
+        setStatus({
+          img: imgSuccess,
+          text: 'Вы успешно зарегистрировались!'
+        })
+        navigate("/sign-in", {replace: true});      
       })
       .catch((err) => {
-        setStatusToolTip(false)
-        setTextToolTip('Что-то пошло не так! Попробуйте еще раз.')
+        setStatus({
+          img: imgFail,
+          text: 'Что-то пошло не так! Попробуйте еще раз.'
+        })        
         console.log(err);
       })
       .finally(() => {
@@ -174,10 +176,12 @@ function App() {
         }
       })
       .catch((err) => {
-        console.log(err);
-        setIsToolTipOpen(true);
-        setStatusToolTip(false);
-        setTextToolTip('Что-то пошло не так! Попробуйте еще раз.')
+        setStatus({
+          img: imgFail,
+          text: 'Что-то пошло не так! Попробуйте еще раз.' 
+        })
+        setIsToolTipOpen(true)
+        console.log(err)
       })
   }
 
@@ -194,7 +198,7 @@ function App() {
           console.log(err);
         })
     }
-  }, [navigate]);
+  }, []);
 
   function signOut() {
     localStorage.removeItem('token');
@@ -219,7 +223,7 @@ function App() {
               loggedIn={loggedIn}
               email={authUserEmail}
               signOut={signOut}
-              />}          
+            />}          
           />
           <Route path="/sign-in"
             element={<Login handleLoginSubmit={handleLogin} />} />
@@ -258,13 +262,12 @@ function App() {
           onCardDelete={handleCardDelete}
         />
         
-        <InfoToolTip>
+        <InfoToolTip
           isOpen={isToolTipOpen}
           onClose={closeAllPopups}
-          text={textToolTip}
-          status={statusToolTip}
-          image={statusToolTip ? imgSuccess : imgFail}
-        </InfoToolTip>
+          text={status.text}
+          img={status.img}
+        />
 
       </CurrentUserContext.Provider>
     </div>  

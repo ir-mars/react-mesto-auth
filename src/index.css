@@ -55,6 +55,10 @@
 @import url('./blocks/popup/__big-img/popup__big-img.css');
 @import url('./blocks/popup/__caption/popup__caption.css');
 @import url('./blocks/popup/_type/popup_type_image.css');
+@import url('./blocks/popup/_type/popup_type_tooltip.css');
+@import url('./blocks/popup/__container/_tooltip/popup__container_tooltip.css');
+@import url('./blocks/popup/__tooltip-img/popup__tooltip-img.css');
+@import url('./blocks/popup/__tooltip-title/popup__tooltip-title.css');
 
 @import url('./blocks/auth/auth.css');
 @import url('./blocks/auth/__container/auth__container.css');
